@@ -1,0 +1,30 @@
+# playbook: linux-common-setup
+#
+# this playbook does default roles for common linux hosts like
+# - installing basic packages
+# 
+# also installs the following for graphical hosts
+# - desktop environment (de, in this case i3)
+#
+# rhel-based specifics:
+# - setup epel (centos and ol)
+# - setup rpm-fusion (fedora)
+# - enable all the different oracle linux repos (ol, obviously)
+#
+# ubuntu specific:
+# - none yet, who uses ubuntu?
+#
+#
+# tojathedog 🐶
+---
+- name: set up common new linux host tasks
+  hosts:
+    - nix_hosts
+  roles:
+    - common-linux
+
+- name: setup de for linx clients/commoners
+  hosts:
+    - nix_clients
+  roles:
+    - de

@@ -1,0 +1,33 @@
+# centos and epel-release
+- name: setup epel for centos 7
+  yum:
+   name: epel-release
+   state: present
+  when: 
+   - ansible_facts['distribution'] == "CentOS"
+   - ansible_facts['distribution_major_version'] == "7"
+  tags: epel_setup
+
+- name: setup epel for centos 8
+  dnf:
+   name: epel-release
+   state: present 
+  when: 
+   - ansible_facts['distribution'] == "CentOS"
+   - ansible_facts['distribution_major_version'] == "8"
+  tags: epel_setup
+
+
+
+# fedora and rpmfusion
+- name: setup rpmfusion for fedora hosts
+  dnf:
+    name:
+     - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_facts['distribution_major_version'] }}.noarch.rpm
+     - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_facts['distribution_major_version'] }}.noarch.rpm
+    state: present
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+  tags: rpmfusion_setup
+
+
