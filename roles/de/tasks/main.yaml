@@ -1,10 +1,3 @@
-# role: de
-# 
-# install linux desktop env
-# current env: i3
-#
-# tojathedog 🐶
-
 - name: setup desktop environment - i3
   include_tasks: de.yaml
   tags:

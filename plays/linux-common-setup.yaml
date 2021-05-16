@@ -12,14 +12,15 @@
 # - enable all the different oracle linux repos (ol, obviously)
 #
 # ubuntu specific:
-# - none yet, who uses ubuntu?
+# - none yet
 #
 #
 # tojathedog 🐶
----
+
 - name: set up common new linux host tasks
   hosts:
     - nix_hosts
+    - nix_cloud_servers
   roles:
     - common-linux
 
@@ -28,3 +29,8 @@
     - nix_clients
   roles:
     - de
+
+- name: install os-specific commoner packages
+  hosts: nix_commoners
+  tasks:
+    - include_tasks: client_packages.yaml

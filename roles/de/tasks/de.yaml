@@ -1,29 +1,10 @@
-- name: install de (i3, centos7)
-  when:
-   - ansible_facts['distribution'] == "CentOS"
-   - ansible_facts['distribution_major_version'] == "7"
-  yum:
+- name: install desktop environments 
+  package:
     name:
       - i3
       - i3status
       - dunst
-    state: present
-  tags:
-    - de
-    - i3
-
-
-
-
-
-- name: install de (i3, centos8 or fedora)
-  when:
-    - (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "8") or ansible_facts['distribution'] == "Fedora"
-  dnf:
-    name:
-      - i3
-      - i3status
-      - dunst
+      - rofi
     state: present
   tags:
     - de

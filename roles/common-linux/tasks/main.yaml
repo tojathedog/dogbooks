@@ -1,15 +1,3 @@
-# main task for role: common-linux
-#
-# task tree
-# |
-# |- setup epel, oracle linux, and rpmfusion repos
-# |- install basic quality of life packages
-# |
-#
-#
-
-
-
 - name: setup epel, oracle and rpmfusion repos
   include_tasks: extra_repos.yaml
   tags: 
@@ -18,4 +6,5 @@
 
 - name: install basic quality of life packages (no display server required)
   include_tasks: basic_packages.yaml
-
+  tags:
+    - basic_packages
