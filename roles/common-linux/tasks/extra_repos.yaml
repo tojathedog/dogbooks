@@ -1,23 +1,11 @@
 # centos and epel-release
-- name: setup epel for centos 7
-  yum:
+- name: setup epel for centos 7/8
+  package:
    name: epel-release
    state: present
   when: 
-   - ansible_facts['distribution'] == "CentOS"
-   - ansible_facts['distribution_major_version'] == "7"
+     - ansible_facts['distribution'] == "CentOS"
   tags: epel_setup
-
-- name: setup epel for centos 8
-  dnf:
-   name: epel-release
-   state: present 
-  when: 
-   - ansible_facts['distribution'] == "CentOS"
-   - ansible_facts['distribution_major_version'] == "8"
-  tags: epel_setup
-
-
 
 # fedora and rpmfusion
 - name: setup rpmfusion for fedora hosts

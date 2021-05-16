@@ -1,0 +1,7 @@
+- hosts: nix_clients
+  tasks:
+  - name: install extra os-specific client packages
+    package:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ extra_client_packages[ansible_facts.distribution] }}"

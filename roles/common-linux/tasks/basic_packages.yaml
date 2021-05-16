@@ -1,29 +1,5 @@
-# to-do: replace this with a group_vars .yaml file to iterate through,
-#        leave the different package managers so later you can 
-#        do void, nixos, etc
-
-
-- name: install some basic quality of life packages (centos7)
-  when: 
-   - ansible_facts['distribution'] == "CentOS"
-   - ansible_facts['distribution_major_version'] == "7"
-  yum:
-    name:
-      - vim
-      - git
-      - wget
-      - curl
+- name: install common packages
+  package:
+    name: "{{ item }}"
     state: present
-
-- name: install some basic quality of life packages (fedora and centos8)
-  when:
-    - (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "8") or ansible_facts['distribution'] == "Fedora"
-  dnf:
-    name:
-      - vim
-      - git
-      - wget
-      - curl
-    state: present
-
-  
+  loop: "{{ basic_packages.common }}"
