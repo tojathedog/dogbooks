@@ -1,3 +1,5 @@
+- name: run apt update if debian-based
+  include_tasks: "snippets/apt_update.yaml"
 - name: install common packages
   package:
     name: "{{ item }}"
