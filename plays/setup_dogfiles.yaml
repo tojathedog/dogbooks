@@ -1,0 +1,17 @@
+- hosts: nix_commoners
+  tasks:
+    - name: grab copy of master dogfiles repo
+      git:
+        repo: "https://github.com/tojathedog/dogfiles.git"
+        dest: "/tmp/dogfiles"
+        version: master
+      become: "{{ target_user }}"
+    - name: put dogfiles in home dir of target user
+      synchronize:
+        src: "/tmp/dogfiles/"
+        dest: "/home/{{ target_user }}/"
+        recursive: yes
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=README.md"
+      delegate_to: "{{ inventory_hostname }}"
