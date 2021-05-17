@@ -34,3 +34,8 @@
   hosts: nix_commoners
   tasks:
     - include_tasks: client_packages.yaml
+
+- name: setup dogfiles
+  hosts: nix_commoners
+  tasks:
+    - include_tasks: setup_dogfiles.yaml

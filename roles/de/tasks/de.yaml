@@ -4,7 +4,9 @@
       - i3
       - i3status
       - dunst
-      - rofi
+      - dmenu
+      - xrdb
+      - rxvt-unicode
     state: present
   tags:
     - de
