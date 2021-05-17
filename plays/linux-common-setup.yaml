@@ -31,6 +31,6 @@
     - de
 
 - name: install os-specific commoner packages
-  hosts: nix_commoners
+  hosts: nix_clients
   tasks:
     - include_tasks: client_packages.yaml
