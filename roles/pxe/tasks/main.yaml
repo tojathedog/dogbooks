@@ -1,0 +1,2 @@
+- name: install pre-req packages
+  include_tasks: pxe_packages.yaml

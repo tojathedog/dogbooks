@@ -5,3 +5,15 @@
     name: "{{ item }}"
     state: present
   loop: "{{ basic_packages.common }}"
+- name: install extra os family specific client packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ basic_packages[ansible_facts.os_family] }}"
+
+- name: enable firewalld on redhat based-distros
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  when: ansible_facts.os_family == "RedHat"
