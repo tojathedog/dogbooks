@@ -1,0 +1,12 @@
+- name: run apt update if debian-based
+  include_tasks: "snippets/apt_update.yaml"
+- name: install common pxe packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pxe_packages.common  if pxe_packages.common is iterable else [] }}"
+- name: install extra os-specific client packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pxe_packages[ansible_facts.os_family] }}"
