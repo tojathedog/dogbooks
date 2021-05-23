@@ -1,0 +1,13 @@
+- name: setup python and openssh-server for debian-based distros
+  raw: apt -y install python3 openssh-server
+  when: 
+    - bootstrap_os is defined
+    - bootstrap_os == "debian"
+
+- name: setup python and openssh-server for rhel-based distros
+  raw: yum -y install python openssh-server
+  when: 
+    - bootstrap_os is defined
+    - bootstrap_os == "redhat"
+
+## to-do: create specific tasks for void and freebsd

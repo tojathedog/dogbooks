@@ -1,3 +1,6 @@
+- name: bootstrap ansible
+  include_tasks: snippets/ansible_bootstrap.yaml
+
 - name: setup epel, oracle and rpmfusion repos
   include_tasks: extra_repos.yaml
   tags: 
