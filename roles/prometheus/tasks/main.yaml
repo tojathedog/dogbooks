@@ -1,0 +1,25 @@
+- name: create prometheus system users
+  include_tasks: create_prometheus_users.yaml
+
+- name: create prometheus directories
+  include_tasks: create_prometheus_dirs.yaml
+
+- name: run tasks to "install" prometheus and prometheus-related packages
+  include_tasks: install_packages.yaml
+
+- name: setup prometheus files
+  include_tasks: setup_prometheus_files.yaml
+
+- name: place prometheus config from template
+  include_tasks: place_prometheus_config.yaml
+
+- name: setup prometheus systemd service file
+  include_tasks: configure_prometheus_service_file.yaml
+  when: ansible_facts.os_family == "RedHat" or ansible_facts.os_family == "Debian"
+
+- name: setup firewalld rules for prometheus
+  include_tasks: configure_firewalld.yaml
+  when: ansible_facts.os_family == "RedHat"
+
+- name: start/restart prometheus services
+  include_tasks: enable_prometheus_services.yaml

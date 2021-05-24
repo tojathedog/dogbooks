@@ -1,0 +1,44 @@
+- name: copy prometheus binary to /usr/local/bin
+  copy:
+    src: "/tmp/prometheus/prometheus"
+    dest: "{{ prometheus_executables_path }}"
+    remote_src: yes
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: copy promtool binary to /usr/local/bin
+  copy:
+    src: "/tmp/prometheus/promtool"
+    dest: "{{ prometheus_executables_path }}"
+    remote_src: yes
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: copy node-exporter binary to /usr/local/bin
+  copy:
+    src: "/tmp/node-exporter/node_exporter"
+    dest: "{{ prometheus_executables_path }}"
+    remote_src: yes
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: copy prometheus consoles to /etc/prometheus
+  copy:
+    src: "/tmp/prometheus/consoles"
+    dest: "{{ prometheus_config_dir }}"
+    remote_src: yes
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: copy prometheus console_libraries to /etc/prometheus
+  copy:
+    src: "/tmp/prometheus/console_libraries"
+    dest: "{{ prometheus_config_dir }}"
+    remote_src: yes
+    owner: prometheus
+    group: prometheus
+    mode: '0755'

@@ -1,0 +1,7 @@
+- name: create prometheus unprivileged users
+  user:
+    name: "{{ item }}"
+    create_home: no
+    shell: "/sbin/nologin"
+    system: yes
+  loop: "{{ prometheus_system_users }}"

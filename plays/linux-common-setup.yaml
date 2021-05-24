@@ -18,6 +18,7 @@
 # tojathedog 🐶
 
 - name: set up common new linux host tasks
+  become: yes
   hosts:
     - nix_hosts
     - nix_cloud_servers

@@ -1,0 +1,6 @@
+- name: configure firewalld for prometheus
+  firewalld:
+    port: "9090/tcp"
+    permanent: yes
+    state: enabled
+    immediate: yes
