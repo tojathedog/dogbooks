@@ -1,0 +1,10 @@
+- name: create prometheus directories
+  file:
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+    name: "{{ item }}"
+  loop:
+    - "{{ prometheus_config_dir }}"
+    - "{{ prometheus_data_dir }}"
