@@ -1,0 +1,35 @@
+variant: fcos
+version: 1.4.0
+passwd:
+  users:
+    - name: {{ default_user }}
+      ssh_authorized_keys:
+{% for key in public_keys %}
+        - "{{ key }}"
+{% endfor %}
+      groups:
+{% for group in default_user_groups %}
+        - {{ group }}
+{% endfor %}
+      shell: {{ default_user_shell }}
+storage:
+  files:
+    - path: /etc/hostname
+      overwrite: true
+      contents:
+        inline: {{ inventory_hostname }}
+    - path: /etc/NetworkManager/system-connections/{{ nic1 }}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id={{ nic1 }}
+          type=ethernet
+          interface-name={{ nic1 }}
+          [ipv4]
+          address1={{ ansible_host }}/{{ subnet_suffix }},{{ gateway }}
+          dhcp-hostname={{ inventory_hostname }}
+          dns={{ dns1 }}
+          dns-search=
+          may-fail=false
+          method=manual

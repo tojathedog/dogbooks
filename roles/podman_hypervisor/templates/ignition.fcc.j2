@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/coreos/installer.d/ignurl.yaml
+      contents:
+        inline: |
+          ignition-url: "http://{{ ip }}:8080/ignition-net.ign"
+    - path: /etc/coreos/installer.d/insecure-ign.yaml
+      contents:
+        inline: |
+          insecure-ignition: true
+    - path: /etc/coreos/installer.d/z-auto-install.yaml
+      contents:
+        inline: |
+          dest-device: {{ os_disk }}

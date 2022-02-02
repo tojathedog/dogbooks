@@ -1,0 +1,7 @@
+- name: enable ports in firewall-cmd 
+  shell: |
+    firewall-cmd --permanent --add-port={{ port }}/{{ protocol }}
+
+- name: reload firewalld
+  shell: |
+    firewall-cmd --reload
