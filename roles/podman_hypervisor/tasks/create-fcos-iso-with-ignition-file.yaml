@@ -1,0 +1,44 @@
+- hosts: localhost
+  gather_facts: true
+
+- hosts: podman_hypervisors
+  connection: local
+  tasks:
+
+  - name: make temp dir for ignition file building from template
+    tempfile:
+      state: directory
+      prefix: "ansible-ignition-build"
+    register: ign_tempdir
+
+  - name: create fcos live boot config from template
+    template:
+      src: "../templates/ignition.fcc.j2"
+      dest: "{{ ign_tempdir.path }}/ignition.fcc"
+    vars:
+      - ip: "{{ hostvars['localhost']['ansible_default_ipv4']['address'] }}"
+
+  - name: create fcos net config from template
+    template:
+      src: "../templates/ignition-net.fcc.j2"
+      dest: "{{ ign_tempdir.path }}/ignition-net.fcc"
+  
+  - name: use fcct to convert boot config to ignition file
+    shell: |
+      fcct --input {{ ign_tempdir.path }}/ignition.fcc --output {{ ign_tempdir.path }}/ignition.ign
+
+  - name: use fcct to convert net config to ignition file
+    shell: |
+      fcct --input {{ ign_tempdir.path }}/ignition-net.fcc --output {{ ign_tempdir.path }}/ignition-net.ign
+
+  - name: create fcos iso with coreos installer
+    shell: |
+      coreos-installer iso ignition embed {{ fcos_iso_path }} -i {{ ign_tempdir.path }}/ignition.ign -o {{ ign_tempdir.path }}/{{ inventory_hostname }}-coreos.iso
+
+  - name: show iso path
+    debug:
+      msg: "iso path is at {{ ign_tempdir.path }}/{{ inventory_hostname }}-coreos.iso"
+
+  - name: show python server run command
+    debug:
+      msg: "run python3 -m http.server --directory {{ ign_tempdir.path }} 8080"
