@@ -1,0 +1,27 @@
+- name: ensure podman and podman-related packages
+  include: snippets/rpm-ostree-install.yaml
+  vars:
+    packages:
+    - podman
+    - skopeo
+    - buildah
+
+- name: create podman user
+  user:
+    name: "{{ podman_user }}"
+    system: yes
+    state: present
+
+- name: create apps group
+  group:
+    name: apps
+    system: yes
+    state: present
+
+- name: create container appdata folder
+  file:
+    state: directory
+    path: "{{ container_data_dir }}"
+    owner: "{{ podman_user }}"
+    group: "apps"
+    mode: 0775

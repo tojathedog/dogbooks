@@ -1,0 +1,16 @@
+- name: install packages task for rpm-ostree
+  become: yes
+  become_method: sudo
+  command: 
+    argv:
+      - "rpm-ostree"
+      - "install"
+      - "{{ item }}"
+      - "--idempotent"
+  loop: "{{ packages }}"
+  register: package_install
+  changed_when:
+    - '"Added" in package_install.stdout'
+  failed_when:
+    - package_install.rc != 0
+    - '"Packages not found" in package_install.stderr'

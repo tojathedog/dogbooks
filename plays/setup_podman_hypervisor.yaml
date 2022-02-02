@@ -2,5 +2,7 @@
   # host might be brand new and not up yet
   # don't try to gather facts
   gather_facts: false
+  become_method: sudo
+  become: true
   roles:
     - podman_hypervisor
