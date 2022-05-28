@@ -5,20 +5,22 @@
     - podman
     - skopeo
     - buildah
+    - slirp4netns
+    - python3-libselinux
+    - python3-policycoreutils
 
-- name: create podman user
+- name: "create podman user, {{ podman_user }}"
   user:
     name: "{{ podman_user }}"
-    system: yes
     state: present
+    create_home: no
 
 - name: create apps group
   group:
-    name: apps
-    system: yes
+    name: "apps"
     state: present
 
-- name: create container appdata folder
+- name: "create container appdata folder {{ container_data_dir }}"
   file:
     state: directory
     path: "{{ container_data_dir }}"

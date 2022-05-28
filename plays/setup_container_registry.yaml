@@ -1,0 +1,11 @@
+- hosts: podman_hypervisors
+  become_method: sudo
+  become: yes
+  roles:
+    - role: podman_hypervisor
+
+- hosts: podman_hypervisors
+  become_method: sudo
+  become: yes
+  roles:
+    - role: container_registry

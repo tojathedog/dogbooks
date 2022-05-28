@@ -1,0 +1,23 @@
+- name: "setup mounts for extra storage on home servers"
+  hosts:
+    - home_servers
+  become: true
+  tasks:
+    - name: create directory for mountpoints
+      file:
+        state: directory
+        path: "{{ item.value.mount_point }}"
+        owner: "root"
+        group: "root"
+        mode: "0777"
+      with_dict:
+        - "{{ extra_storage }}"
+    - name: "configure extra storage in fstab"
+      ansible.posix.mount:
+        path: "{{ item.value.mount_point }}"
+        src: "UUID={{ item.value.uuid }}"
+        fstype: "{{ item.value.fstype }}"
+        opts: "noatime"
+        state: "mounted"
+      with_dict:
+        - "{{ extra_storage }}"

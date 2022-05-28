@@ -1,0 +1,113 @@
+- name: install pre-requisite httpd-tools
+  include: snippets/rpm-ostree-install.yaml
+  vars:
+    packages:
+      - httpd-tools
+  register: packages_install_rpmostree
+
+#- name: coreos must be rebooted to use package if installed
+#  fail:
+#    msg: "must reboot before using packages"
+#  when: packages_install_rpmostree.changed
+
+- name: create container registry user
+  user:
+    name: "{{ container_registry_user }}"
+    append: true
+    groups:
+      - "apps"
+  tags:
+    - user
+
+- name: create necessary registry dirs
+  file:
+    state: directory
+    path: "{{ container_data_dir }}/registry/{{ item }}"
+    owner: "{{ container_registry_user }}"
+    group: "{{ container_registry_user }}"
+    recurse: true
+    mode: 0775
+  loop:
+    - auth
+    - certs
+    - data
+
+- name: copy ssl cert to certs folder
+  copy:
+    src: "{{ ssl_domains['domain']['cert_path'] }}"
+    dest: "{{ container_data_dir }}/registry/certs/"
+    owner: "{{ container_registry_user }}"
+    group: "{{ container_registry_user }}"
+    mode: 0600
+
+- name: copy ssl cert key to certs folder
+  copy:
+    src: "{{ ssl_domains['domain']['cert_key_path'] }}"
+    dest: "{{ container_data_dir }}/registry/certs/"
+    owner: "{{ container_registry_user }}"
+    group: "{{ container_registry_user }}"
+    mode: 0600
+
+- name: run htpasswd to create registry login user
+  command:
+    argv:
+      - "htpasswd"
+      - "-bBc"
+      - "{{ container_data_dir }}/registry/auth/htpasswd"
+      - "{{ container_registry_login_username }}"
+      - "{{ container_registry_login_pass }}"
+
+- name: "set correct selinux container context for container files"
+  become: true
+  command:
+    argv:
+      - "chcon"
+      - "-R"
+      - "-t"
+      - "container_file_t"
+      - "{{ container_data_dir }}/registry"
+
+- name: "enable loginctl linger for {{ app_user }}"
+  become: true
+  command:
+    argv:
+      - "loginctl"
+      - "enable-linger"
+      - "{{ app_user }}"
+
+- name: pull podman image for container registry
+  become: true
+  become_method: "sudo"
+  become_user: "{{ app_user }}"
+  containers.podman.podman_image:
+    name: "{{ app_image }}"
+    pull: true
+
+- name: "create network for container registry with {{ app_ip }} range"
+  become: true
+  become_method: "sudo"
+  become_user: "{{ app_user }}"
+  containers.podman.podman_network:
+    name: "{{ ansible_role_name }}-{{ inventory_hostname }}"
+    gateway: "{{ gateway }}"
+    state: present
+    ip_range: "{{ app_ip }}{{ app_subnet_cidr }}"
+    subnet: "{{ app_subnet }}"
+    driver: "macvlan"
+    
+- name: run container registry... container
+  become: true
+  become_method: "sudo"
+  become_user: "{{ app_user }}"
+  containers.podman.podman_container:
+    ip: "{{ app_ip }}"
+    name: "{{ ansible_role_name }}-{{ inventory_hostname }}"
+    image: "{{ app_image }}"
+    volume: "{{ app_volumes }}"
+    ports: "5000:5000"
+    env: "{{ app_env }}"
+    network: "{{ ansible_role_name }}-{{ inventory_hostname }}"
+    recreate: true
+  tags:
+    - never
+    - run_container

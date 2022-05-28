@@ -27,8 +27,9 @@ storage:
           type=ethernet
           interface-name={{ nic1 }}
           [ipv4]
-          address1={{ ansible_host }}/{{ subnet_suffix }},{{ gateway }}
+          address1={{ ansible_host }}/{{ subnet_suffix }}
           dhcp-hostname={{ inventory_hostname }}
+          gateway={{ gateway }}
           dns={{ dns1 }}
           dns-search=
           may-fail=false

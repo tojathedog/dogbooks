@@ -1,1 +1,6 @@
+# ignore my inventory file
 inventory
+
+# ignore vim temp files
+*.swp
+.swp
